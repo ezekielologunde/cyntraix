@@ -999,6 +999,52 @@ footer { border-top: 1px solid var(--line); padding: 72px var(--gutter) 40px; po
 .foot-base a { color: var(--ink-dim); transition: color 0.3s var(--ease-soft); }
 .foot-base a:hover { color: var(--accent); }
 
+/* ============ WORK / CASE STUDIES ============ */
+.case-study {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 44px 36px;
+  display: flex; flex-direction: column; gap: 28px;
+}
+.case-idx {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent);
+}
+.case-study h2 {
+  font-family: var(--mono); font-weight: 700;
+  font-size: clamp(22px, 2.8vw, 34px);
+  line-height: 1.2; letter-spacing: -0.01em;
+  margin-top: 10px;
+}
+.case-study h2 em { font-style: normal; color: var(--accent); }
+.case-desc { color: var(--ink-dim); font-size: 15px; line-height: 1.75; max-width: 68ch; }
+.case-stats {
+  display: flex; flex-wrap: wrap; gap: 32px;
+  padding: 24px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+}
+.case-stats .stat-num { font-family: var(--mono); font-weight: 700; font-size: 22px; color: var(--ink); }
+.case-stats .stat-lbl {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-dim); margin-top: 4px;
+}
+.case-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.case-tag {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-dim); border: 1px solid var(--line-bright); padding: 6px 12px;
+}
+.case-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+.resource-note {
+  border: 1px dashed var(--line-bright);
+  padding: 32px;
+  display: flex; flex-direction: column; gap: 12px;
+  align-items: flex-start;
+}
+.resource-note h3 { font-family: var(--mono); font-weight: 700; font-size: 20px; margin-top: 6px; }
+.resource-note p { color: var(--ink-dim); font-size: 14px; line-height: 1.75; max-width: 68ch; }
+.resource-note .attribution { font-size: 12.5px; font-style: italic; }
+.resource-note .cta-btn { margin-top: 6px; }
+
 /* ============ 404 ============ */
 .error-page {
   min-height: calc(100vh - 106px);
