@@ -29,17 +29,21 @@
   setInterval(tick, 1000);
 })();
 
-/* ---- Reveal on scroll ---- */
+/* ---- Reveal on scroll (fade-up + declassify redaction bars) ---- */
 (function () {
-  const els = document.querySelectorAll('.reveal');
+  const els = document.querySelectorAll('.reveal, .redact');
+  const activate = (el) => {
+    el.classList.add('in');
+    el.querySelectorAll('.redact').forEach((r) => r.classList.add('in'));
+  };
   if (!('IntersectionObserver' in window)) {
-    els.forEach(e => e.classList.add('in'));
+    els.forEach(activate);
     return;
   }
   const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('in');
+        activate(entry.target);
         io.unobserve(entry.target);
       }
     });
