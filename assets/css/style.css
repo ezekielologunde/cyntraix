@@ -224,6 +224,8 @@ nav.top {
   flex-shrink: 0;
   filter: drop-shadow(0 0 14px color-mix(in srgb, var(--accent) 40%, transparent));
 }
+.brand-mark path, .cta-mark path { stroke: var(--accent); transition: stroke 0.3s var(--ease-soft); }
+.brand:hover .brand-mark path { stroke: var(--accent-light); }
 .brand-text sup {
   color: var(--accent);
   font-size: 9px;

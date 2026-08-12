@@ -12,6 +12,17 @@
     btn.setAttribute('aria-label', theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
   };
 
+  // Some engines don't live-recompute var()-based SVG stroke/fill on a
+  // custom-property change the way they do for ordinary CSS properties --
+  // logo color would then only update on the next full page load. Force it
+  // explicitly so the toggle is instant everywhere, including the mark.
+  const restrokeLogo = () => {
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+    document.querySelectorAll('.brand-mark path, .cta-mark path').forEach((p) => {
+      p.style.stroke = accent;
+    });
+  };
+
   sync(current());
 
   btn.addEventListener('click', () => {
@@ -23,6 +34,7 @@
     }
     try { localStorage.setItem('cyntraix-theme', next); } catch (e) {}
     sync(next);
+    restrokeLogo();
     window.dispatchEvent(new Event('cyntraix:themechange'));
   });
 })();
