@@ -24,8 +24,16 @@
   var pointer = { x: -9999, y: -9999, active: false };
   var running = true;
   var rafId = null;
+  var lineRGB = '238, 236, 228';
+  var accentRGB = '242, 92, 43';
 
   function rand(min, max) { return min + Math.random() * (max - min); }
+
+  function readThemeColors() {
+    var cs = getComputedStyle(document.documentElement);
+    lineRGB = cs.getPropertyValue('--net-line-color').trim() || lineRGB;
+    accentRGB = cs.getPropertyValue('--accent-rgb').trim() || accentRGB;
+  }
 
   function resize() {
     w = window.innerWidth;
@@ -85,8 +93,8 @@
         var alpha = baseAlpha + proximity * 0.35;
 
         ctx.strokeStyle = proximity > 0.05
-          ? 'rgba(242, 92, 43, ' + Math.min(0.6, alpha) + ')'
-          : 'rgba(238, 236, 228, ' + Math.min(0.35, alpha) + ')';
+          ? 'rgba(' + accentRGB + ', ' + Math.min(0.6, alpha) + ')'
+          : 'rgba(' + lineRGB + ', ' + Math.min(0.35, alpha) + ')';
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
@@ -106,8 +114,8 @@
       ctx.beginPath();
       ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
       ctx.fillStyle = prox > 0.05
-        ? 'rgba(242, 92, 43, ' + Math.min(1, 0.4 + prox * 0.6) + ')'
-        : 'rgba(238, 236, 228, 0.28)';
+        ? 'rgba(' + accentRGB + ', ' + Math.min(1, 0.4 + prox * 0.6) + ')'
+        : 'rgba(' + lineRGB + ', 0.28)';
       ctx.fill();
     }
   }
@@ -130,7 +138,12 @@
     running = !document.hidden;
     if (running && !rafId) tick();
   });
+  window.addEventListener('cyntraix:themechange', readThemeColors);
+  new MutationObserver(readThemeColors).observe(document.documentElement, {
+    attributes: true, attributeFilter: ['data-theme'],
+  });
 
+  readThemeColors();
   resize();
   tick();
 })();

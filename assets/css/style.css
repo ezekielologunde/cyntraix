@@ -7,6 +7,24 @@ button { font: inherit; cursor: pointer; border: none; background: none; color: 
 a { color: inherit; text-decoration: none; }
 
 /* ============ DESIGN TOKENS ============ */
+/* Fixed regardless of theme: redaction bars are always black (real redaction
+   is black marker on paper, dark or light doesn't change that), and text
+   sitting on the accent gradient stays dark for reliable contrast across
+   the whole gradient run. */
+:root {
+  --redact-bar: #0a0a0a;
+  --on-accent: #1c1209;
+
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+  --sans: 'Public Sans', system-ui, -apple-system, sans-serif;
+
+  --max: 1400px;
+  --gutter: clamp(20px, 4vw, 56px);
+  --ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Dark theme (default) — logo-derived orange, unchanged from the original build. */
 :root {
   --void: #09090a;
   --panel: #111113;
@@ -16,19 +34,53 @@ a { color: inherit; text-decoration: none; }
   --line: #201f1c;
   --line-bright: #363330;
 
-  --accent: #f25c2b;           /* fiery orange — logo primary, unchanged */
-  --accent-deep: #d93d12;      /* logo gradient end, unchanged */
+  --accent: #f25c2b;
+  --accent-deep: #d93d12;
   --accent-light: #ff7a4d;
   --accent-grad: linear-gradient(135deg, #f56b3c 0%, #d93d12 100%);
   --success: #6fb37a;
 
-  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
-  --sans: 'Public Sans', system-ui, -apple-system, sans-serif;
+  --nav-bg: rgba(9, 9, 10, 0.82);
+  --scope-bg: linear-gradient(180deg, rgba(17, 17, 19, 0.8), rgba(17, 17, 19, 0.45));
+  --hero-tint: radial-gradient(ellipse 70% 60% at 30% 20%, rgba(242, 92, 43, 0.22), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(217, 61, 18, 0.16), transparent 65%),
+    linear-gradient(180deg, rgba(9, 9, 10, 0.62) 0%, rgba(9, 9, 10, 0.8) 55%, var(--void) 100%);
+  --cursor-ring-color: rgba(238, 236, 228, 0.38);
+  --net-line-color: 238, 236, 228;
+  --accent-rgb: 242, 92, 43;
+  --hero-media-display: block;
+}
 
-  --max: 1400px;
-  --gutter: clamp(20px, 4vw, 56px);
-  --ease: cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+/* Light theme — the original ChatGPT brand brief: white background, the
+   brief's exact orange/red. --accent is darkened slightly from the brief's
+   literal #FF5C00 (3.1:1 on white, fails AA for the small mono labels used
+   everywhere in this design) to #C04400 (5.16:1) so it stays legible; the
+   gradient keeps the brief's vivid #FF5C00 as its start since gradient-clip
+   headline text here is always large enough for the 3:1 large-text minimum. */
+:root[data-theme="light"] {
+  --void: #ffffff;
+  --panel: #f6f5f2;
+  --paper: #f0ede6;
+  --ink: #1a1a1a;
+  --ink-dim: #5c574f;
+  --line: #e6e3dc;
+  --line-bright: #d3cfc5;
+
+  --accent: #c04400;
+  --accent-deep: #e0002a;
+  --accent-light: #ff7a33;
+  --accent-grad: linear-gradient(135deg, #ff5c00 0%, #e0002a 100%);
+  --success: #278035;
+
+  --nav-bg: rgba(255, 255, 255, 0.82);
+  --scope-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.6));
+  --hero-tint: radial-gradient(ellipse 70% 60% at 30% 20%, rgba(255, 92, 0, 0.14), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(224, 0, 42, 0.10), transparent 65%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.88) 55%, var(--void) 100%);
+  --cursor-ring-color: rgba(26, 26, 26, 0.3);
+  --net-line-color: 26, 26, 26;
+  --accent-rgb: 192, 68, 0;
+  --hero-media-display: none;
 }
 
 body {
@@ -43,7 +95,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-::selection { background: var(--accent); color: var(--void); }
+::selection { background: var(--accent); color: var(--on-accent); }
 
 :focus-visible {
   outline: 2px solid var(--accent);
@@ -85,14 +137,14 @@ body {
 }
 .cursor-ring {
   width: 30px; height: 30px;
-  border: 1px solid rgba(238, 236, 228, 0.38);
+  border: 1px solid var(--cursor-ring-color);
   transition: width 0.25s var(--ease-soft), height 0.25s var(--ease-soft),
     border-color 0.25s var(--ease-soft), background 0.25s var(--ease-soft);
 }
 .cursor-ring.hover {
   width: 50px; height: 50px;
   border-color: var(--accent);
-  background: rgba(242, 92, 43, 0.08);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
 }
 
 .aurora {
@@ -100,13 +152,13 @@ body {
   top: -20%; right: -10%;
   width: 60vw; height: 60vw;
   pointer-events: none; z-index: 0;
-  background: radial-gradient(circle, rgba(242, 92, 43, 0.10) 0%, transparent 60%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 60%);
   filter: blur(60px);
 }
 .aurora.two {
   top: auto; right: auto;
   bottom: -20%; left: -20%;
-  background: radial-gradient(circle, rgba(217, 61, 18, 0.07) 0%, transparent 60%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-deep) 7%, transparent) 0%, transparent 60%);
 }
 
 main, nav, footer { position: relative; z-index: 1; }
@@ -155,7 +207,7 @@ nav.top {
   display: flex; align-items: center; justify-content: space-between;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  background: rgba(9, 9, 10, 0.82);
+  background: var(--nav-bg);
   border-bottom: 1px solid var(--line);
   z-index: 50;
 }
@@ -170,7 +222,7 @@ nav.top {
 .brand-mark {
   width: 30px; height: 30px;
   flex-shrink: 0;
-  filter: drop-shadow(0 0 14px rgba(242, 92, 43, 0.4));
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--accent) 40%, transparent));
 }
 .brand-text sup {
   color: var(--accent);
@@ -197,6 +249,21 @@ nav.top {
 .nav-links a:hover::before, .nav-links a[aria-current="page"]::before { color: var(--accent); }
 
 .nav-right { display: flex; align-items: center; gap: 18px; }
+.theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; flex-shrink: 0;
+  border: 1px solid var(--line-bright);
+  color: var(--ink-dim);
+  transition: border-color 0.3s var(--ease-soft), color 0.3s var(--ease-soft);
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .icon-moon { display: none; }
+[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+[data-theme="light"] .theme-toggle .icon-moon { display: block; }
+@media (max-width: 420px) {
+  .nav-right .cta-btn { display: none; }
+}
 .nav-toggle {
   display: none;
   width: 44px; height: 44px;
@@ -210,8 +277,14 @@ nav.top {
 .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
 @media (max-width: 860px) {
+  /* backdrop-filter on nav.top creates a new containing block for
+     position:fixed descendants (CSS filter-effects spec), which would
+     otherwise anchor .nav-links to the ~70px nav bar instead of the
+     viewport and collapse its height. Drop the blur here only -- the
+     mobile menu isn't visible behind the nav anyway. */
+  nav.top { backdrop-filter: none; -webkit-backdrop-filter: none; }
   .nav-links {
-    position: fixed; inset: 70px 0 0 0;
+    position: fixed; top: 70px; right: 0; bottom: 0; left: 0;
     flex-direction: column; align-items: flex-start; gap: 0;
     background: var(--void);
     padding: 12px var(--gutter) 40px;
@@ -247,7 +320,7 @@ nav.top {
   transition: transform 0.4s var(--ease);
   z-index: -1;
 }
-.cta-btn:hover { color: #fff; border-color: var(--accent); transform: translateY(-1px); }
+.cta-btn:hover { color: var(--on-accent); border-color: var(--accent); transform: translateY(-1px); }
 .cta-btn:hover::before { transform: translateY(0); }
 .cta-btn:active { transform: translateY(0) scale(0.98); }
 .cta-btn .arrow { transition: transform 0.3s var(--ease-soft); display: inline-block; }
@@ -255,7 +328,7 @@ nav.top {
 .cta-btn.primary {
   background: var(--accent-grad);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 .cta-btn.primary::before {
   background: var(--ink);
@@ -268,7 +341,7 @@ nav.top {
 .redact-line { position: relative; display: block; overflow: hidden; padding: 0.05em 0; }
 .redact-line .bar {
   position: absolute; inset: 0;
-  background: var(--void);
+  background: var(--redact-bar);
   transform-origin: right;
   transform: scaleX(1);
 }
@@ -297,6 +370,7 @@ nav.top {
   overflow: hidden;
 }
 .hero-video {
+  display: var(--hero-media-display);
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
@@ -307,6 +381,7 @@ nav.top {
 }
 .hero-video.scrub-active { opacity: 0; }
 .hero-video-canvas {
+  display: var(--hero-media-display);
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   z-index: -2;
@@ -318,10 +393,7 @@ nav.top {
 .hero-video-tint {
   position: absolute; inset: 0;
   z-index: -1;
-  background:
-    radial-gradient(ellipse 70% 60% at 30% 20%, rgba(242,92,43,0.22), transparent 60%),
-    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(217,61,18,0.16), transparent 65%),
-    linear-gradient(180deg, rgba(9,9,10,0.62) 0%, rgba(9,9,10,0.8) 55%, var(--void) 100%);
+  background: var(--hero-tint);
 }
 .hero-grid {
   display: grid;
@@ -346,9 +418,9 @@ nav.top {
   animation: pulse 2.2s var(--ease-soft) infinite;
 }
 @keyframes pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(242, 92, 43, 0.7); }
-  70%  { box-shadow: 0 0 0 14px rgba(242, 92, 43, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(242, 92, 43, 0); }
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent); }
+  70%  { box-shadow: 0 0 0 14px color-mix(in srgb, var(--accent) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); }
 }
 .hero-eyebrow .sep { width: 1px; height: 12px; background: var(--line-bright); }
 
@@ -392,7 +464,7 @@ nav.top {
 /* Hero scope panel */
 .scope {
   border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(17,17,19,0.8), rgba(17,17,19,0.45));
+  background: var(--scope-bg);
   backdrop-filter: blur(8px);
   padding: 26px;
   position: relative;
@@ -474,7 +546,7 @@ nav.top {
 .page-header::before {
   content: "";
   position: absolute; inset: 0; z-index: -1;
-  background: radial-gradient(ellipse 60% 70% at 15% 0%, rgba(242,92,43,0.12), transparent 60%);
+  background: radial-gradient(ellipse 60% 70% at 15% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 60%);
 }
 .breadcrumb {
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -522,7 +594,7 @@ nav.top {
 .statband-grid { display: grid; grid-template-columns: repeat(4, 1fr); max-width: var(--max); margin: 0 auto; }
 @media (max-width: 720px) { .statband-grid { grid-template-columns: repeat(2, 1fr); } }
 .stat { padding: 40px var(--gutter); border-right: 1px solid var(--line); transition: background 0.4s var(--ease-soft); }
-.stat:hover { background: rgba(242, 92, 43, 0.04); }
+.stat:hover { background: color-mix(in srgb, var(--accent) 4%, transparent); }
 .stat:last-child { border-right: none; }
 @media (max-width: 720px) {
   .stat:nth-child(2) { border-right: none; }
@@ -593,14 +665,14 @@ nav.top {
   padding: 32px 32px 32px 34px;
   border-left: 2px solid var(--accent);
   position: relative;
-  background: linear-gradient(90deg, rgba(242,92,43,0.05), transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 5%, transparent), transparent);
 }
 .philosophy-quote::before {
   content: "STATEMENT ON RECORD";
   position: absolute;
   top: -11px; left: 32px;
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
-  color: var(--void);
+  color: var(--on-accent);
   background: var(--accent-grad);
   padding: 3px 8px;
 }
@@ -626,7 +698,7 @@ nav.top {
   .diff { padding: 52px 38px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
   .diff:last-child { border-right: none; }
 }
-.diff:hover { background: rgba(242, 92, 43, 0.035); }
+.diff:hover { background: color-mix(in srgb, var(--accent) 3.5%, transparent); }
 .diff-num {
   font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--ink-dim);
@@ -635,7 +707,7 @@ nav.top {
 }
 .diff-num .tier {
   font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
-  color: var(--void);
+  color: var(--on-accent);
   background: var(--accent-grad);
   padding: 3px 8px;
 }
@@ -694,7 +766,7 @@ nav.top {
   .comp:nth-child(7) { grid-column: span 2; }
   .comp:nth-child(8) { grid-column: span 2; }
 }
-.comp:hover { background: #0f0f11; }
+.comp:hover { background: var(--panel); }
 .comp:hover .rune { color: var(--accent); }
 .comp:hover .comp-idx { color: var(--accent); }
 .comp-idx {
@@ -735,7 +807,7 @@ nav.top {
 }
 .service-row::before {
   content: ""; position: absolute; inset: 0;
-  background: linear-gradient(90deg, rgba(242,92,43,0.07) 0%, transparent 70%);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 7%, transparent) 0%, transparent 70%);
   opacity: 0; transition: opacity 0.5s var(--ease-soft);
 }
 .service-row:hover::before { opacity: 1; }
@@ -850,12 +922,12 @@ nav.top {
 
 /* ============ CTA BLOCK ============ */
 .cta-block { padding: clamp(90px, 15vh, 160px) var(--gutter); text-align: center; border-top: 1px solid var(--line); position: relative; overflow: hidden; }
-.cta-block::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(242,92,43,0.10), transparent 60%); pointer-events: none; }
+.cta-block::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%); pointer-events: none; }
 .cta-block::after {
   content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
   width: 60%; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent);
 }
-.cta-mark { width: 72px; height: 72px; margin: 0 auto 36px; filter: drop-shadow(0 0 30px rgba(242, 92, 43, 0.5)); animation: floaty 6s ease-in-out infinite; }
+.cta-mark { width: 72px; height: 72px; margin: 0 auto 36px; filter: drop-shadow(0 0 30px color-mix(in srgb, var(--accent) 50%, transparent)); animation: floaty 6s ease-in-out infinite; }
 @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 .cta-block .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; }
 .cta-block h2 {
@@ -884,8 +956,8 @@ nav.top {
 }
 .field textarea { resize: vertical; min-height: 128px; font-family: var(--mono); font-size: 16px; }
 .field input:focus-visible, .field textarea:focus-visible, .field select:focus-visible {
-  outline: none; border-color: var(--accent); background: #141416;
-  box-shadow: 0 0 0 3px rgba(242, 92, 43, 0.28);
+  outline: none; border-color: var(--accent); background: var(--panel);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
 }
 .field input::placeholder, .field textarea::placeholder { color: var(--ink-dim); }
 .field .label-req { color: var(--accent); margin-left: 3px; }

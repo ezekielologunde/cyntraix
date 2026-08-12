@@ -1,3 +1,32 @@
+/* ---- Theme toggle (dark is the unattributed default; light is opt-in and
+   persisted). The actual attribute-setting for returning visitors happens
+   in an inline head script so it applies before first paint -- this just
+   wires up the button and keeps it in sync. ---- */
+(function () {
+  const btn = document.getElementById('themeToggle');
+  if (!btn) return;
+
+  const current = () => (document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+  const sync = (theme) => {
+    btn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+    btn.setAttribute('aria-label', theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
+  };
+
+  sync(current());
+
+  btn.addEventListener('click', () => {
+    const next = current() === 'light' ? 'dark' : 'light';
+    if (next === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    try { localStorage.setItem('cyntraix-theme', next); } catch (e) {}
+    sync(next);
+    window.dispatchEvent(new Event('cyntraix:themechange'));
+  });
+})();
+
 /* ---- Mobile nav toggle ---- */
 (function () {
   const toggle = document.querySelector('.nav-toggle');

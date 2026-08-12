@@ -10,6 +10,9 @@
   var canvas = hero && hero.querySelector('.hero-video-canvas');
   if (!hero || !video || !canvas) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // The particles clip assumes a dark backdrop; it's hidden entirely in the
+  // light theme (see --hero-media-display), so skip the extraction work too.
+  if (document.documentElement.getAttribute('data-theme') === 'light') return;
 
   var MIN_FRAMES = 24;
   var MAX_FRAMES = 90;
