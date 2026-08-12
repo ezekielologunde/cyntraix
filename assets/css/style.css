@@ -60,15 +60,39 @@ body {
   mix-blend-mode: overlay;
 }
 
-.grid-veil {
+.net-canvas {
   position: fixed; inset: 0;
   pointer-events: none; z-index: 0;
-  background-image:
-    linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px);
-  background-size: 80px 80px;
-  mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
-  -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
+  display: block;
+}
+@media (prefers-reduced-motion: reduce) {
+  .net-canvas { display: none; }
+}
+
+/* ============ CUSTOM CURSOR ============ */
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor, html.has-cursor * { cursor: none !important; }
+}
+.cursor-dot, .cursor-ring {
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 200;
+  border-radius: 50%;
+  will-change: transform;
+}
+.cursor-dot {
+  width: 4px; height: 4px;
+  background: var(--accent);
+}
+.cursor-ring {
+  width: 30px; height: 30px;
+  border: 1px solid rgba(238, 236, 228, 0.38);
+  transition: width 0.25s var(--ease-soft), height 0.25s var(--ease-soft),
+    border-color 0.25s var(--ease-soft), background 0.25s var(--ease-soft);
+}
+.cursor-ring.hover {
+  width: 50px; height: 50px;
+  border-color: var(--accent);
+  background: rgba(242, 92, 43, 0.08);
 }
 
 .aurora {
@@ -429,6 +453,16 @@ nav.top {
   margin-top: 10px;
   letter-spacing: 0.08em;
 }
+.scope-feed {
+  margin-top: 16px; padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono); font-size: 11px;
+  color: var(--ink-dim);
+  display: flex; align-items: baseline; gap: 7px;
+  min-height: 16px;
+}
+.scope-feed .feed-prompt { color: var(--accent); flex-shrink: 0; }
+.scope-feed .feed-cursor { color: var(--accent); animation: blink 1s step-end infinite; }
 
 /* ============ PAGE HEADER (interior pages) ============ */
 .page-header {

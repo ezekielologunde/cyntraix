@@ -29,12 +29,30 @@
   setInterval(tick, 1000);
 })();
 
-/* ---- Reveal on scroll (fade-up + declassify redaction bars) ---- */
+/* ---- Reveal on scroll (fade-up + declassify redaction bars + count-up) ---- */
 (function () {
   const els = document.querySelectorAll('.reveal, .redact');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const countUp = (el) => {
+    const target = parseFloat(el.getAttribute('data-target'));
+    if (!isFinite(target)) return;
+    if (reduceMotion) { el.textContent = target; return; }
+    const duration = 900;
+    const start = performance.now();
+    const ease = t => 1 - Math.pow(1 - t, 3);
+    const frame = (now) => {
+      const p = Math.min(1, (now - start) / duration);
+      el.textContent = Math.round(ease(p) * target);
+      if (p < 1) requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  };
+
   const activate = (el) => {
     el.classList.add('in');
     el.querySelectorAll('.redact').forEach((r) => r.classList.add('in'));
+    el.querySelectorAll('.count').forEach(countUp);
   };
   if (!('IntersectionObserver' in window)) {
     els.forEach(activate);
@@ -49,6 +67,67 @@
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
   els.forEach(el => io.observe(el));
+})();
+
+/* ---- Live feed typewriter (posture panel) ---- */
+(function () {
+  const el = document.getElementById('feedLine');
+  if (!el) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    el.textContent = 'scan_complete :: 14,204 assets indexed';
+    return;
+  }
+  const lines = [
+    'scan_complete :: 14,204 assets indexed',
+    'intel_sync :: 42 feeds reconciled',
+    'anomaly_check :: 0 flagged, 3 reviewed',
+    'perimeter_probe :: no drift detected',
+    'session_audit :: 118 active, 0 stale',
+    'trust_eval :: all principals verified',
+  ];
+  let lineIndex = 0;
+  let charIndex = 0;
+  let deleting = false;
+
+  const tick = () => {
+    const current = lines[lineIndex];
+    if (!deleting) {
+      charIndex++;
+      el.textContent = current.slice(0, charIndex);
+      if (charIndex === current.length) {
+        setTimeout(() => { deleting = true; tick(); }, 2200);
+        return;
+      }
+      setTimeout(tick, 34);
+    } else {
+      charIndex--;
+      el.textContent = current.slice(0, charIndex);
+      if (charIndex === 0) {
+        deleting = false;
+        lineIndex = (lineIndex + 1) % lines.length;
+        setTimeout(tick, 400);
+        return;
+      }
+      setTimeout(tick, 16);
+    }
+  };
+  tick();
+})();
+
+/* ---- Magnetic buttons ---- */
+(function () {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const MAX_X = 10, MAX_Y = 7;
+  document.querySelectorAll('.cta-btn').forEach((btn) => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const relX = (e.clientX - rect.left) / rect.width - 0.5;
+      const relY = (e.clientY - rect.top) / rect.height - 0.5;
+      btn.style.transform = `translate(${relX * MAX_X * 2}px, ${relY * MAX_Y * 2 - 1}px)`;
+    });
+    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+  });
 })();
 
 /* ---- Expandable service rows (services page) ---- */

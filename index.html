@@ -21,7 +21,6 @@
 <body>
 
 <div class="grain"></div>
-<div class="grid-veil"></div>
 <div class="aurora"></div>
 <div class="aurora two"></div>
 
@@ -101,6 +100,9 @@
           <div class="bar-track"></div>
           <div class="lbl"><span>Continuous monitoring</span><span>~ 24/7</span></div>
         </div>
+        <div class="scope-feed">
+          <span class="feed-prompt">&gt;</span><span id="feedLine"></span><span class="feed-cursor">_</span>
+        </div>
       </div>
     </div>
   </section>
@@ -109,7 +111,7 @@
   <section class="statband seamless">
     <div class="statband-grid">
       <div class="stat reveal">
-        <div class="n">24<span class="unit">/7</span></div>
+        <div class="n"><span class="count" data-target="24">0</span><span class="unit">/7</span></div>
         <div class="k">Continuous posture</div>
       </div>
       <div class="stat reveal delay-1">
@@ -117,7 +119,7 @@
         <div class="k">Default architecture</div>
       </div>
       <div class="stat reveal delay-2">
-        <div class="n">&lt;15<span class="unit">min</span></div>
+        <div class="n">&lt;<span class="count" data-target="15">0</span><span class="unit">min</span></div>
         <div class="k">Incident acknowledgement</div>
       </div>
       <div class="stat reveal delay-3">
@@ -289,6 +291,8 @@
   </div>
 </footer>
 
+<script src="assets/js/network-canvas.js" defer></script>
+<script src="assets/js/cursor.js" defer></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/scroll-video.js" defer></script>
 </body>
