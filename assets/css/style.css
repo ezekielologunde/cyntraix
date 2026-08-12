@@ -223,9 +223,12 @@ nav.top {
   width: 42px; height: 42px;
   flex-shrink: 0;
   filter: drop-shadow(0 0 14px color-mix(in srgb, var(--accent) 40%, transparent));
+  transition: filter 0.3s var(--ease-soft), transform 0.3s var(--ease-soft);
 }
-.brand-mark path, .cta-mark path { stroke: var(--accent); transition: stroke 0.3s var(--ease-soft); }
-.brand:hover .brand-mark path { stroke: var(--accent-light); }
+.brand:hover .brand-mark {
+  filter: drop-shadow(0 0 20px color-mix(in srgb, var(--accent) 60%, transparent)) brightness(1.12);
+  transform: translateY(-1px);
+}
 .brand-text sup {
   color: var(--accent);
   font-size: 9px;

@@ -27,9 +27,19 @@
 
 <nav class="top">
   <a href="index.html" class="brand" aria-label="Cyntraix home">
-    <svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M24 3 L43 13.5 V34.5 L24 45 L5 34.5 V13.5 Z" stroke-width="4" stroke-linejoin="round"/>
-      <path d="M15.5 27 L24 12 L32.5 27" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <svg class="brand-mark" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="logoGradNav" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" style="stop-color:var(--accent-light)" />
+          <stop offset="100%" style="stop-color:var(--accent-deep)" />
+        </linearGradient>
+        <mask id="logoMaskNav">
+          <path d="M24 3 L43 13.5 V34.5 L24 45 L5 34.5 V13.5 Z" fill="#fff" />
+          <path d="M15 29 L24 13 L33 29" fill="none" stroke="#000" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M24 30.5 L27.5 34 L24 37.5 L20.5 34 Z" fill="#000" />
+        </mask>
+      </defs>
+      <path d="M24 3 L43 13.5 V34.5 L24 45 L5 34.5 V13.5 Z" fill="url(#logoGradNav)" mask="url(#logoMaskNav)" />
     </svg>
     <span class="brand-text">Cyntraix<sup>™</sup></span>
   </a>
