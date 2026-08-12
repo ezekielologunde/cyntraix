@@ -220,7 +220,7 @@ nav.top {
   text-transform: lowercase;
 }
 .brand-mark {
-  width: 30px; height: 30px;
+  width: 42px; height: 42px;
   flex-shrink: 0;
   filter: drop-shadow(0 0 14px color-mix(in srgb, var(--accent) 40%, transparent));
 }
@@ -284,7 +284,7 @@ nav.top {
      mobile menu isn't visible behind the nav anyway. */
   nav.top { backdrop-filter: none; -webkit-backdrop-filter: none; }
   .nav-links {
-    position: fixed; top: 70px; right: 0; bottom: 0; left: 0;
+    position: fixed; top: 77px; right: 0; bottom: 0; left: 0;
     flex-direction: column; align-items: flex-start; gap: 0;
     background: var(--void);
     padding: 12px var(--gutter) 40px;
@@ -927,7 +927,7 @@ nav.top {
   content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
   width: 60%; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent);
 }
-.cta-mark { width: 72px; height: 72px; margin: 0 auto 36px; filter: drop-shadow(0 0 30px color-mix(in srgb, var(--accent) 50%, transparent)); animation: floaty 6s ease-in-out infinite; }
+.cta-mark { width: 100px; height: 100px; margin: 0 auto 36px; filter: drop-shadow(0 0 30px color-mix(in srgb, var(--accent) 50%, transparent)); animation: floaty 6s ease-in-out infinite; }
 @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 .cta-block .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; }
 .cta-block h2 {
