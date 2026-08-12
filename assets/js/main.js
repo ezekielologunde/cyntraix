@@ -50,13 +50,28 @@
 /* ---- Expandable service rows (services page) ---- */
 (function () {
   const rows = document.querySelectorAll('.service-row[data-expandable]');
+  const toggle = (row) => {
+    const trigger = row.querySelector('.row-inner');
+    const wasOpen = row.classList.contains('expanded');
+    rows.forEach(r => {
+      r.classList.remove('expanded');
+      const t = r.querySelector('.row-inner');
+      if (t) t.setAttribute('aria-expanded', 'false');
+    });
+    if (!wasOpen) {
+      row.classList.add('expanded');
+      if (trigger) trigger.setAttribute('aria-expanded', 'true');
+    }
+  };
   rows.forEach(row => {
     const trigger = row.querySelector('.row-inner');
     if (!trigger) return;
-    trigger.addEventListener('click', () => {
-      const wasOpen = row.classList.contains('expanded');
-      rows.forEach(r => r.classList.remove('expanded'));
-      if (!wasOpen) row.classList.add('expanded');
+    trigger.addEventListener('click', () => toggle(row));
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        toggle(row);
+      }
     });
   });
 })();

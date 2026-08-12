@@ -12,7 +12,7 @@ a { color: inherit; text-decoration: none; }
   --bg-elev: #121216;
   --ink: #f2ede3;
   --ink-dim: #a8a49c;
-  --ink-muted: #5d5a54;
+  --ink-muted: #7d7a74;
   --line: #1f2026;
   --line-bright: #33343c;
 
@@ -44,6 +44,12 @@ body {
 }
 
 ::selection { background: var(--accent); color: var(--bg); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
 
 /* ============ ATMOSPHERE ============ */
 .grain {
@@ -158,7 +164,7 @@ nav.top {
 .nav-right { display: flex; align-items: center; gap: 18px; }
 .nav-toggle {
   display: none;
-  width: 40px; height: 40px;
+  width: 44px; height: 44px;
   border: 1px solid var(--line-bright);
   align-items: center; justify-content: center;
   flex-direction: column; gap: 5px;
@@ -562,7 +568,7 @@ nav.top {
   border-top: 1px solid var(--line);
   padding-top: 30px;
 }
-.philosophy-block h3 {
+.philosophy-block h2 {
   font-family: var(--serif);
   font-size: 26px;
   font-weight: 400;
@@ -733,7 +739,7 @@ nav.top {
   color: var(--ink-muted);
   transition: color 0.4s var(--ease);
 }
-.comp h4 {
+.comp h2 {
   font-family: var(--serif);
   font-size: clamp(22px, 2vw, 28px);
   font-weight: 400;
@@ -741,7 +747,7 @@ nav.top {
   letter-spacing: -0.015em;
   margin-top: 18px;
 }
-.comp h4 em {
+.comp h2 em {
   font-style: italic;
   background: var(--accent-grad);
   -webkit-background-clip: text;
@@ -754,7 +760,7 @@ nav.top {
   line-height: 1.55;
   margin-top: 14px;
 }
-.comp:nth-child(1) h4, .comp:nth-child(4) h4 {
+.comp:nth-child(1) h2, .comp:nth-child(4) h2 {
   font-size: clamp(28px, 2.8vw, 42px);
 }
 .comp .rune {
@@ -788,6 +794,7 @@ nav.top {
   gap: 28px;
   position: relative;
   z-index: 1;
+  cursor: pointer;
   transition: transform 0.5s var(--ease), color 0.3s var(--ease);
 }
 .service-row::before {
@@ -866,7 +873,7 @@ nav.top {
   color: var(--accent);
   margin-bottom: 22px;
 }
-.approach-aside h3 {
+.approach-aside h2 {
   font-family: var(--serif);
   font-size: clamp(30px, 3.2vw, 46px);
   font-weight: 300;
@@ -874,7 +881,7 @@ nav.top {
   letter-spacing: -0.025em;
   font-variation-settings: "opsz" 144;
 }
-.approach-aside h3 em {
+.approach-aside h2 em {
   font-style: italic;
   background: var(--accent-grad);
   -webkit-background-clip: text;
@@ -937,7 +944,7 @@ nav.top {
   font-variation-settings: "opsz" 144;
   line-height: 1;
 }
-.step h4 {
+.step h3 {
   font-family: var(--serif);
   font-size: 24px;
   font-weight: 400;
@@ -1141,27 +1148,40 @@ nav.top {
 }
 .field input, .field textarea, .field select {
   width: 100%;
+  min-height: 44px;
   background: var(--bg-elev);
   border: 1px solid var(--line-bright);
   color: var(--ink);
   font-family: var(--sans);
   font-size: 15px;
   padding: 15px 16px;
-  transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease), box-shadow 0.3s var(--ease);
 }
 .field textarea { resize: vertical; min-height: 130px; }
-.field input:focus, .field textarea:focus, .field select:focus {
+.field input:focus-visible, .field textarea:focus-visible, .field select:focus-visible {
   outline: none;
   border-color: var(--accent);
   background: #16161b;
+  box-shadow: 0 0 0 3px rgba(242, 92, 43, 0.28);
 }
 .field input::placeholder, .field textarea::placeholder { color: var(--ink-muted); }
+.field .label-req { color: var(--accent); margin-left: 3px; }
 .form-note {
   margin-top: 8px;
   font-family: var(--mono); font-size: 11px;
   color: var(--ink-muted);
   letter-spacing: 0.04em;
 }
+.form-status {
+  margin-top: 16px;
+  font-family: var(--mono); font-size: 12px;
+  color: var(--success);
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.form-status.visible { opacity: 1; transform: translateY(0); }
 .contact-info { border-top: 1px solid var(--line); padding-top: 30px; }
 .contact-info-row {
   display: flex; justify-content: space-between; align-items: baseline;
@@ -1210,7 +1230,7 @@ footer {
   margin-top: 28px;
 }
 .foot-social a {
-  width: 40px; height: 40px;
+  width: 44px; height: 44px;
   border: 1px solid var(--line-bright);
   display: grid; place-items: center;
   transition: all 0.3s var(--ease);
@@ -1222,7 +1242,7 @@ footer {
 }
 .foot-social svg { width: 16px; height: 16px; }
 
-.foot-col h5 {
+.foot-col-title {
   font-family: var(--mono); font-size: 10px;
   letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--accent);
